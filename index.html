@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Identity</title>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 50px;">
+
+<h1>🔐 Digital Identity System</h1>
+
+<input id="name" type="text" placeholder="Enter Name" style="padding:10px;"><br><br>
+<input id="email" type="email" placeholder="Enter Email" style="padding:10px;"><br><br>
+
+<button onclick="createIdentity()" style="padding:10px;">Create Identity</button>
+<button onclick="verifyIdentity()" style="padding:10px;">Verify Identity</button>
+
+<h3 id="result"></h3>
+
+<script>
+function createIdentity() {
+    fetch('http://127.0.0.1:5000/create_identity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('result').innerText =
+            "Hash: " + data.hash + "\nTX ID: " + data.txid;
+    })
+    .catch(err => {
+        alert("Error: Make sure backend is running!");
+    });
+}
+
+function verifyIdentity() {
+    fetch('http://127.0.0.1:5000/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('result').innerText =
+            "Verified Hash: " + data.hash;
+    })
+    .catch(err => {
+        alert("Error: Make sure backend is running!");
+    });
+}
+</script>
+
+</body>
+</html>
